@@ -15,7 +15,8 @@ class FirestoreStream(Stream):
     def _pagination_field_for_collection(self, collection_name: str) -> str | None:
         """Return the pagination key for a given collection name."""
         pagination_fields = [
-            val for val in self.config.get("pagination_fields", [])
+            val
+            for val in self.config.get("pagination_fields", [])
             if val["collection"] == collection_name
         ]
         if len(pagination_fields) == 0:
@@ -80,9 +81,13 @@ class FirestoreStream(Stream):
                 )
                 for doc in query.stream():
                     yield {"_id": doc.id, "document": doc.to_dict()}
-                is_complete = len(list(query.stream())) < self.config["pagination_limit"]
+                is_complete = (
+                    len(list(query.stream())) < self.config["pagination_limit"]
+                )
                 try:
-                    start_after_val = list(query.stream())[-1].to_dict()[pagination_field]
+                    start_after_val = list(query.stream())[-1].to_dict()[
+                        pagination_field
+                    ]
                 except IndexError:
                     is_complete = True
 

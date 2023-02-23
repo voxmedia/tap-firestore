@@ -37,18 +37,18 @@ class TapFirestore(Tap):
                 )
             ),
             description="List of fields to use for pagination. Each list element is an "
-                        "object with `collecction` (the name of the collection) and "
-                        "`field_name` (the field to use for paginating through that "
-                        "collection. If not provided for a collection, the tap will"
-                        "attempt to fetch all documents without pagination, which could"
-                        "result in 5xx errors from Firestore.",
+            "object with `collecction` (the name of the collection) and "
+            "`field_name` (the field to use for paginating through that "
+            "collection. If not provided for a collection, the tap will"
+            "attempt to fetch all documents without pagination, which could"
+            "result in 5xx errors from Firestore.",
         ),
         th.Property(
             "pagination_limit",
             th.IntegerType,
             description="The maximum number of documents to fetch per page. Defaults "
-                        "to 10000. If you are getting 5xx errors from Firestore, try "
-                        "reducing this value.",
+            "to 10000. If you are getting 5xx errors from Firestore, try "
+            "reducing this value.",
             default=10_000,
         ),
     ).to_dict()
@@ -88,7 +88,7 @@ class TapFirestore(Tap):
                         "type": "object",
                         "additionalProperties": True,
                         "description": "The document from the Firestore collection",
-                    }
+                    },
                 },
             }
             entry.schema = entry.schema.from_dict(schema)
