@@ -1,0 +1,32 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: "tap-firestore"
+include_paths:
+- ./*.meltano.yml
+default_environment: test
+plugins:
+  extractors:
+  - name: "tap-firestore"
+    namespace: "tap_firestore"
+    pip_url: -e .
+    capabilities:
+    - state
+    - catalog
+    - discover
+    - about
+    - stream-maps
+    config:
+      start_date: '2023-01-01T00:00:00Z'
+    settings:
+    # TODO: To configure using Meltano, declare settings and their types here:
+    - name: service_account_path
+      kind: password
+    - name: start_date
+      value: '2010-01-01T00:00:00Z'
+    - name: pagination_fields
+    - name: pagination_limit
+      value: 10000
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl
