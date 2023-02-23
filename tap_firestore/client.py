@@ -47,9 +47,6 @@ class FirestoreStream(Stream):
 
         Args:
             context: Stream partition or context dictionary.
-
-        Raises:
-            NotImplementedError: If the implementation is TODO
         """
         # TODO: should any of this live in the tap class?
         creds = credentials.Certificate(self.config["service_account_path"])
