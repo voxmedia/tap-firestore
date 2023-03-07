@@ -51,6 +51,13 @@ class TapFirestore(Tap):
             "reducing this value.",
             default=10_000,
         ),
+        th.Property(
+            "firebase_options",
+            th.ObjectType(),
+            description="Additional options passed when initializing a Firebase Admin "
+                        "App instance. (see https://firebase.google.com/docs/reference/"
+                        "admin/python/firebase_admin#initialize_app).",
+        )
     ).to_dict()
 
     @property
