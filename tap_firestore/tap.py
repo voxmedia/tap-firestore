@@ -74,7 +74,10 @@ class TapFirestore(Tap):
         catalog = Catalog()
         creds = credentials.Certificate(self.config["service_account_path"])
         try:  # TODO: improve this
-            firebase_admin.initialize_app(creds)
+            firebase_admin.initialize_app(
+                credential=creds,
+                options=self.config.get("firebase_options"),
+            )
         except ValueError:
             pass
         db = firestore.client()
