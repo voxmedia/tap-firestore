@@ -52,6 +52,10 @@ class FirestoreStream(Stream):
         # TODO: should any of this live in the tap class?
         creds = credentials.Certificate(self.config["service_account_path"])
         try:  # TODO: improve this
+            self.logger.info(
+                f"Initializing Firebase Admin App with options: "
+                f"{self.config.get('firebase_options')}"
+            )
             firebase_admin.initialize_app(
                 credential=creds,
                 options=self.config.get("firebase_options"),
