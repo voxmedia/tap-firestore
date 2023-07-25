@@ -4,8 +4,11 @@ from __future__ import annotations
 
 from typing import Iterable
 
+import backoff
 import firebase_admin
 from firebase_admin import credentials, firestore
+from google.api_core.exceptions import ServiceUnavailable
+from google.api_core.retry import Retry
 from singer_sdk.streams import Stream
 
 
@@ -39,6 +42,11 @@ class FirestoreStream(Stream):
         for doc in query.stream():
             yield {"_id": doc.id, "document": doc.to_dict()}
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=ServiceUnavailable,
+        max_tries=3,
+    )
     def get_records(self, context: dict | None) -> Iterable[dict]:
         """Return a generator of record-type dictionary objects.
 
@@ -66,12 +74,15 @@ class FirestoreStream(Stream):
 
         pagination_field = self._pagination_field_for_collection(self.name)
         if pagination_field:
+            self.logger.info(
+                f"Fetching {self.config['pagination_limit']} records from {self.name}"
+            )
             query = (
                 db.collection(self.name)
                 .order_by(pagination_field)
                 .limit(self.config["pagination_limit"])
             )
-            for doc in query.stream():
+            for doc in query.stream(retry=Retry()):
                 yield {"_id": doc.id, "document": doc.to_dict()}
             is_complete = len(list(query.stream())) < self.config["pagination_limit"]
             try:
