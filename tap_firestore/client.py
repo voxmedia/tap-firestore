@@ -73,6 +73,7 @@ class FirestoreStream(Stream):
         db = firestore.client()
 
         pagination_field = self._pagination_field_for_collection(self.name)
+        self.logger.info(f"Pagination field for {self.name}: {pagination_field}")
         if pagination_field:
             self.logger.info(
                 f"Fetching {self.config['pagination_limit']} records from {self.name}"
